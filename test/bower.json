@@ -1,0 +1,13 @@
+{
+  "name": "udare_test",
+  "version": "0.0.1",
+  "main": "app/index.html",
+  "dependencies": {
+    "requirejs": "*"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ]
+}

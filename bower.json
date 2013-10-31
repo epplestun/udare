@@ -1,0 +1,15 @@
+{
+  "name": "udare",
+  "version": "0.0.1",
+  "dependencies": {
+    "director": "*",
+    "q" : "*",
+    "handlebars.js" : "*",
+    "watcher.js" : "*"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ]
+}
