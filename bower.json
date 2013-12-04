@@ -4,8 +4,7 @@
   "dependencies": {
     "director": "*",
     "q" : "*",
-    "handlebars.js" : "*",
-    "watcher.js" : "*"
+    "handlebars.js" : "*"
   },
   "ignore": [
     "**/.*",

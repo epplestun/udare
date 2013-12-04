@@ -1,0 +1,25 @@
+<h1>Accounts {{accounts.length}}</h1>
+
+<form onsubmit="return false;">
+  <fieldset>
+    <lable>Name</lable><input tpye="text" id="name" name="name" />
+  </fieldset>
+  <fieldset>
+    <lable>Email</lable><input tpye="text" id="email" name="email" />
+  </fieldset>
+  <fieldset>
+    <lable>Phone</lable><input tpye="text" id="phone" name="phone" />
+  </fieldset>
+  <fieldset>
+    <button data-click="add()">Add account</button>
+    <button data-click="update()">Update account</button>
+  </fieldset>
+</form>
+
+<br/>
+
+<ul>
+{{#order accounts "desc"}}
+	<li>{{@index}} - {{name}} - {{email}} - {{phoneNumber phone}} <a href="#" data-click="edit({{id}})">Edit</a> - <a href="#" data-click="remove({{id}})">Delete</a></li>
+{{/order}}
+</ul>

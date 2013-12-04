@@ -1,4 +1,6 @@
-udare.routerProvider = (function(request, controllers, view, undefined) {
+udare.routerProvider = (function(q, request, compiler, executor, log, undefined) {
+  log.info('udare.routerProvider');
+
   var RouterProvider = function() {
     this.routes = [];
 
@@ -27,16 +29,38 @@ udare.routerProvider = (function(request, controllers, view, undefined) {
 
         var r = new RegExp(pattern);
         if(r.test(path) === true) {
-          this.route(view(route.options.view), route.options.controller);
+          this.route(
+            route.options.view.template, 
+            route.options.view.id,
+            route.options.controller
+          );
         }
       }
     },
 
-    route : function(view, controller) {      
-      request.get(view.getTemplate())
+    route : function(template, container, controller) { 
+      request.get(template)
         .then(function(response) {
-          view.setSource(response);          
-          controllers[controller].init(view);
+          (function() {
+            var deferred = q.defer();
+
+            compiler.compile(response, controller, function(d, controllers, html, mainCrtl) {
+              d.resolve({
+                c: controllers, 
+                h : html,
+                m : mainCrtl
+              });
+            }.bind(this, deferred));
+
+            return deferred.promise;
+          })().then(function(obj) {
+            var executorInstance = new executor();
+            executorInstance.setHTML(obj.h);
+            executorInstance.setControllers(obj.c);
+            //executorInstance.setContainer(container);
+            executorInstance.setContainer(document.getElementById(container));
+            executorInstance.execute(obj.m);  
+          });
         }, function(error) {
           console.log('Error!', error);
         });
@@ -44,4 +68,4 @@ udare.routerProvider = (function(request, controllers, view, undefined) {
   };
 
   return new RouterProvider();
-})(udare.request, udare.controllers, udare.view);
+})(udare.q, udare.request, udare.compiler, udare.executor, udare.log);

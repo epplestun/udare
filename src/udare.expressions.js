@@ -7,7 +7,9 @@
  * {{ click() }}
  * {{ name.tal }}
  */
-udare.expressions = (function(undefined) {
+udare.expressions = (function(log, undefined) {
+  log.info('udare.expressions');
+  
 	var parse = function(source) {
       var parts = {};      
 
@@ -26,4 +28,4 @@ udare.expressions = (function(undefined) {
   return {
   	parse : parse
   };
-})();
+})(udare.log);

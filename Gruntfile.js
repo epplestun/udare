@@ -10,20 +10,36 @@ module.exports = function(grunt) {
           'lib/q/q.min.js',
           'lib/handlebars.js/dist/handlebars.js',
 
-          //'lib/Watch.JS/src/watch.js',
-          //'lib/hogan.js/dist/hogan-3.0.0.min.mustache.js',
+          'src/vendor/htmlparser.js',
 
           // project sources
           'src/udare.js',
-          'src/udare.utils.js',
-          'src/udare.expressions.js',
-          'src/udare.module.js',
+          'src/udare.logProvider.js',
+          'src/udare.q.js',
+          'src/udare.utils.js',                    
+          
+          'src/udare.injector.js',
+          'src/udare.pubsub.js',
+          'src/udare.watcher.js',
           'src/udare.scope.js',
+
+          'src/udare.expressions.js',
           'src/udare.events.js',
+          'src/udare.dom.js',
+
+          'src/udare.compiler.js',
+          'src/udare.executor.js',
+
+          'src/udare.module.js',
+          'src/udare.filter.js',
+          'src/udare.formatter.js',
+          'src/udare.service.js',
           'src/udare.controller.js',
-          'src/udare.view.js',
+          'src/udare.component.js',
           'src/udare.request.js',
-          'src/udare.routerProvider.js'
+          'src/udare.restfulProvider.js',
+          'src/udare.routerProvider.js',
+          'src/udare.stateProvider.js'
         ],
         dest: 'dist/<%= pkg.name %>.js'
       }      

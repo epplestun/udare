@@ -1,0 +1,92 @@
+<test1component success value="2" data-model="test1component"></test1component> {{test1component}}
+
+<br/><br/>
+
+
+<br/><br/>
+
+<div test1component success value="2" data-model="test1component2"></div> {{test1component2}}
+
+<br/><br/>
+
+<div class="test1component" success value="2" data-model="test1component3"></div> {{test1component3}}
+
+<br/><br/>
+
+{{name}} {{name.length}}
+<br/>
+
+
+<input type="text" data-model="myTest"/> {{myTest}} <input type="checkbox" id="x" checked="checked" /> <input type="checkbox" id="z" />
+<br/>
+
+<form>
+  <fieldset>
+    <label for="text">Input text</label>
+    <input type="text" id="text" name="text" />
+  </fieldset>
+  <fieldset>
+    <label for="password">Input password</label>
+    <input type="password" id="password" name="password" />
+  </fieldset>
+  <fieldset>
+    <label for="radio1">Input radio</label>
+    <input type="radio" id="radio1" name="radio" />1
+    <input type="radio" id="radio2" name="radio" checked="checked" />2
+    <input type="radio" id="radio3" name="radio" />3
+  </fieldset>
+  <fieldset>
+    <label for="checkbox1">Input checkbox</label>
+    <input type="checkbox" id="checkbox1" name="checkbox1" />
+    <input type="checkbox" id="checkbox2" name="checkbox2" checked="checked" />
+    <input type="checkbox" id="checkbox3" name="checkbox3" />
+  </fieldset>
+  <fieldset>
+    <label for="file">Input file</label>
+    <input type="file" id="file" name="file" />
+  </fieldset>
+  <fieldset>
+    <label for="textarea">Textarea</label>
+    <textarea id="textarea" name="textarea"></textarea>
+  </fieldset>
+  <fieldset>
+    <label for="select">Select</label>
+    <select id="select">
+      <option value="1">Option 1</option>
+      <option value="2">Option 2</option>
+      <option value="3" selected="selected">Option 3</option>
+    </select>
+  </fieldset>
+</form>
+
+<hr/>
+
+<ul>
+  {{#order lista "desc"}}<li>{{.}}</li>{{/order}}
+</ul>
+
+<hr/>
+{{username}}
+<h1>Dashboard <i>{{username}}</i></h1><button data-click="updateUsername(Leire)">Update username</button>
+
+<div id="widget1Controller" data-controller="Widget1Controller">
+
+  <test1component success value="2" data-model="test2component"></test1component> {{test2component}}
+
+  <ul>
+    {{#lista}}<li>{{.}}</li>{{/lista}}
+  </ul>
+  
+  Widget: <a href="#" data-click="click()">{{widget}}</a>
+
+  <input type="text" name="model" id="model" data-model="widget"/>{{widget}} <button data-click="updateValue(value)">Update value</button>
+
+  <div id="widget2Controller" data-controller="Widget2Controller">
+    Widget: <a href="#" data-click="click()">{{widget}}</a>
+    <input type="text" name="model" id="model2" data-model="widget"/>{{widget}}
+  </div>
+</div>
+
+<b>{{lastname}}</b>
+
+<input type="text" data-model="myTest2"/> {{myTest2}}

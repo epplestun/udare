@@ -1,4 +1,6 @@
-udare.utils = (function(undefined) {
+udare.utils = (function(log, undefined) {
+  log.info('udare.utils');
+
   return {
     STRIP_COMMENTS : /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg,
 
@@ -25,6 +27,23 @@ udare.utils = (function(undefined) {
 
       var uuid = s.join("");
       return uuid;
+    },
+
+    replace : function(source, object, regexp) {
+      return String(source).replace(regexp || (/\\?\{{([^{}]+)\}}/g), function(match, name) {
+        return object[name] ? object[name] : match;
+      });
+    },
+
+    scopeVarsFromSource : function(source) {
+      var vars = source.match(/\\?\{{([^{}]+)\}}/g);
+      var out = [];
+      for(var i = 0, l = vars.length; i < l; i++) {
+        var scopeVar = vars[i].replace('{{', '').replace('}}', '');
+        out.push(scopeVar);
+      }
+
+      return out;
     }
   };
-})();
+})(udare.log);

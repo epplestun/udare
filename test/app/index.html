@@ -3,12 +3,30 @@
 <head>
   <meta charset="utf-8">
   <title>udare test</title>
+  <style type="text/css">
+  div[data-view=menu] { background: red; }
+  div[data-view=data] { background: white; }
+
+  div[data-view=lateral] { background: blue; width: 150px; float:left; }
+  div[data-view=content] { background: white; width: auto; float:left;}
+  </style>
 </head>
 
 <body>
-<button data-click="click()">Click</button>
-<nav><a href="#/view1">View 1</a><a href="#/view2">View 2</a></nav>
+
+<div data-view="main">-</div>
+
+<!--
+<div data-view="menu">-</div>
+<div data-view="data">#</div>
+-->
+
+<!--<div data-view id="mainView"></div>-->
+
+<!--
+<nav><a href="#/dashboard">Dashboard</a><a href="#/accounts">Accounts</a></nav>
 <div data-view id="mainView"></div>
+-->
 <script data-main="js/main.js" src="lib/requirejs/require.js"></script>
 </body>
 </html>

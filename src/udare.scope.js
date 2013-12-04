@@ -1,36 +1,27 @@
-udare.scope = (function(utils, undefined) {
-  var Scope = function(view) {
-    this.id = utils.createUUID();
+udare.scope = (function(utils, pubsub, watcher, log, undefined) {
+  log.info('udare.scope');
 
-    var re = /data-model=["'](\w+)["']/gm,
-      match,
-      results = [];
-
-    do {
-      match = re.exec(view.getSource());
-      if (match) {
-        Object.defineProperty(this, match[1], {
+  var Scope = function(vars) {
+    try {
+      this.id = utils.createUUID();
+      
+      for(var i = 0, l = vars.length; i < l; i++) {
+        Object.defineProperty(this, vars[i], {
           enumerable: true,
           writable: true,
-          configurable: true,
-          value: null
+          configurable: true
         });
-        
-        this.watch(match[1], function(id, oldval, newval) {
-          var aux = {};
-          aux[id] = newval;
-        
-          //self[id] = newval;
-
-          view.parse(this);
-
-          return newval;
-        }.bind(this));
       }
-    } while (match);
+
+      watcher.watch(this, function(obj) {
+        pubsub.publish('executor.execute', [obj]);
+      });
+    } catch(e) {
+      log.error(e.message);
+    }
   };
 
-  return function(view) {
-    return new Scope(view);
+  return function(vars) {
+    return new Scope(vars);
   };
-})(udare.utils);
+})(udare.utils, udare.pubsub, udare.watcher, udare.log);
