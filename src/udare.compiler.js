@@ -34,11 +34,12 @@ udare.compiler = (function(componentsRepository, controllersRepository, utils, s
 
       htmlParser(html, {
         start: function(tag, attrs, unary) {
+          var ctrlName;
           for(var i = 0, l = attrs.length; i < l; i++) {
             var attr = attrs[i];
 
             if(attr.name === 'data-controller') {
-              ctrlIndex++
+              ctrlIndex++;
               tagCtrl = tag;
               controllers[attr.value] = {
                 vars : []
@@ -46,12 +47,12 @@ udare.compiler = (function(componentsRepository, controllersRepository, utils, s
             }
 
             if(attr.name === 'data-model') {
-              var ctrlName = Object.keys(controllers)[ctrlIndex];
+              ctrlName = Object.keys(controllers)[ctrlIndex];
               controllers[ctrlName].vars.push(attr.value);
             }
 
             if(attr.name.substring(0, 4) === 'data' && attr.name !== 'data-controller') {
-              var ctrlName = Object.keys(controllers)[ctrlIndex];
+              ctrlName = Object.keys(controllers)[ctrlIndex];
 
               output.push({
                 oldtext : attr.name + '="' + attr.value + '"',

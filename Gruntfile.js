@@ -45,6 +45,22 @@ module.exports = function(grunt) {
       }      
     },
 
+    jshint: {
+      options: {
+        //ignores: ['src/vendor/*.js'],
+        curly: true,
+        eqeqeq: true,
+        eqnull: true,
+        browser: true,
+        globals: {
+          define: true,
+          require: true
+        },
+      },
+      beforeconcat: ['src/*.js'],
+      afterconcat: ['dist/<%= pkg.name %>.js']
+    },
+
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
@@ -61,6 +77,9 @@ module.exports = function(grunt) {
 
   // Load the plugin that provides the "concat" task.
   grunt.loadNpmTasks('grunt-contrib-concat');
+
+  // Load the plugin that provides the "jshint" task.
+  grunt.loadNpmTasks('grunt-contrib-jshint');
 
   // Load the plugin that provides the "uglify" task.
   grunt.loadNpmTasks('grunt-contrib-uglify');

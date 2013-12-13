@@ -2871,7 +2871,8 @@ udare.dom = (function(utils, log, undefined) {
   log.info('udare.dom');
 
   var getNodeList = function(elem) {
-    var l = new Array(elem), c = 1, ret = new Array();
+    var l = new Array(elem), c = 1, ret = [];
+    //var l = [].push(elem), c = 1, ret = [];
     for(var r = 0; r < c; r++) { 
       for(var z = 0; z < l[r].childNodes.length; z++) {
         ret.push(l[r].childNodes[z]);
@@ -3074,11 +3075,12 @@ udare.compiler = (function(componentsRepository, controllersRepository, utils, s
 
       htmlParser(html, {
         start: function(tag, attrs, unary) {
+          var ctrlName;
           for(var i = 0, l = attrs.length; i < l; i++) {
             var attr = attrs[i];
 
             if(attr.name === 'data-controller') {
-              ctrlIndex++
+              ctrlIndex++;
               tagCtrl = tag;
               controllers[attr.value] = {
                 vars : []
@@ -3086,12 +3088,12 @@ udare.compiler = (function(componentsRepository, controllersRepository, utils, s
             }
 
             if(attr.name === 'data-model') {
-              var ctrlName = Object.keys(controllers)[ctrlIndex];
+              ctrlName = Object.keys(controllers)[ctrlIndex];
               controllers[ctrlName].vars.push(attr.value);
             }
 
             if(attr.name.substring(0, 4) === 'data' && attr.name !== 'data-controller') {
-              var ctrlName = Object.keys(controllers)[ctrlIndex];
+              ctrlName = Object.keys(controllers)[ctrlIndex];
 
               output.push({
                 oldtext : attr.name + '="' + attr.value + '"',
@@ -4200,8 +4202,6 @@ udare.stateProvider = (function(q, request, compiler, executor, log, undefined) 
       executorInstance.setContainer(document.querySelector('[data-view=' + id + ']'));
       executorInstance.execute(obj.m); 
 
-      console.log('resolve', id);
-
       deferred.resolve('') ;
     });
   };
@@ -4222,8 +4222,6 @@ udare.stateProvider = (function(q, request, compiler, executor, log, undefined) 
       if(views.length > 0) {
         for(var index in views) {
           var view = views[index];
-
-          console.log(view, stateViews, stateViews[view.id]);
 
           if(stateViews[view.id]) {
             getStateViews(view.id, view.element, stateViews[view.id].template, stateViews);
@@ -4284,46 +4282,8 @@ udare.stateProvider = (function(q, request, compiler, executor, log, undefined) 
           var stateViews = mergeViewsAndAbstractStates(state.views, this.abstractStates);
           getStateViews(this.mainView.id, this.mainView.element, layout.template, stateViews);
         } else {
-          // no tiene layout, cargar directamente template en main
-
           getStateViews(this.mainView.id, this.mainView.element, state.template, stateViews);
-          console.info('Cargar sin layout', state.template, null);
         }
-
-        /*
-        var stateViews;
-
-        if(state.views) {
-          // si tiene vistas el estado se mergean
-          stateViews = mergeViewsAndAbstractStates(state.views, this.abstractStates);
-        } else {
-          // si no tiene vistas se carga la plantilla asociada al estado
-          var stateView = {};
-          stateView[index] = {
-            template : state.template,
-            controller : state.controller
-          };
-
-          stateViews = mergeViewsAndAbstractStates(stateView, this.abstractStates);
-        }
-
-
-        console.log(stateViews);
-        */
-
-
-
-        /*
-        for(var viewIndex in this.mainViews) {
-          var view = this.mainViews[viewIndex];
-
-          if(stateViews[view.id]) {
-            requestPromises.push(
-              getStateViews(view.id, view.element, stateViews[view.id].template, stateViews)
-            );
-          }
-        }
-        */
       }
     }
 

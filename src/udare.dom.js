@@ -2,7 +2,8 @@ udare.dom = (function(utils, log, undefined) {
   log.info('udare.dom');
 
   var getNodeList = function(elem) {
-    var l = new Array(elem), c = 1, ret = new Array();
+    var l = new Array(elem), c = 1, ret = [];
+    //var l = [].push(elem), c = 1, ret = [];
     for(var r = 0; r < c; r++) { 
       for(var z = 0; z < l[r].childNodes.length; z++) {
         ret.push(l[r].childNodes[z]);

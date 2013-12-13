@@ -42,8 +42,6 @@ udare.stateProvider = (function(q, request, compiler, executor, log, undefined) 
       executorInstance.setContainer(document.querySelector('[data-view=' + id + ']'));
       executorInstance.execute(obj.m); 
 
-      console.log('resolve', id);
-
       deferred.resolve('') ;
     });
   };
@@ -64,8 +62,6 @@ udare.stateProvider = (function(q, request, compiler, executor, log, undefined) 
       if(views.length > 0) {
         for(var index in views) {
           var view = views[index];
-
-          console.log(view, stateViews, stateViews[view.id]);
 
           if(stateViews[view.id]) {
             getStateViews(view.id, view.element, stateViews[view.id].template, stateViews);
@@ -126,46 +122,8 @@ udare.stateProvider = (function(q, request, compiler, executor, log, undefined) 
           var stateViews = mergeViewsAndAbstractStates(state.views, this.abstractStates);
           getStateViews(this.mainView.id, this.mainView.element, layout.template, stateViews);
         } else {
-          // no tiene layout, cargar directamente template en main
-
           getStateViews(this.mainView.id, this.mainView.element, state.template, stateViews);
-          console.info('Cargar sin layout', state.template, null);
         }
-
-        /*
-        var stateViews;
-
-        if(state.views) {
-          // si tiene vistas el estado se mergean
-          stateViews = mergeViewsAndAbstractStates(state.views, this.abstractStates);
-        } else {
-          // si no tiene vistas se carga la plantilla asociada al estado
-          var stateView = {};
-          stateView[index] = {
-            template : state.template,
-            controller : state.controller
-          };
-
-          stateViews = mergeViewsAndAbstractStates(stateView, this.abstractStates);
-        }
-
-
-        console.log(stateViews);
-        */
-
-
-
-        /*
-        for(var viewIndex in this.mainViews) {
-          var view = this.mainViews[viewIndex];
-
-          if(stateViews[view.id]) {
-            requestPromises.push(
-              getStateViews(view.id, view.element, stateViews[view.id].template, stateViews)
-            );
-          }
-        }
-        */
       }
     }
 
