@@ -13,16 +13,18 @@ define([
     udare.restfulProvider, 
     udare.stateProvider
   ]);
-  app.filter('order', function(data, direction, options) {
-    if(data) {
-      data = data.sort(function(a, b) {
+  app.filter('order', function(data, direction, options) { // hacer que llegue una copia a la funcion
+    var newData = data.slice();
+
+    if(newData && direction && options) {
+      newData = newData.sort(function(a, b) {
         if(direction.toUpperCase() === 'ASC')
           return a - b;
         if(direction.toUpperCase() === 'DESC')
           return b - a;
       });
 
-      return this.filter(data, options);
+      return this.filter(newData, options);
     }
   });
   app.formatter('phoneNumber', function(phoneNumber) {

@@ -22,4 +22,10 @@
 {{#order accounts "desc"}}
 	<li>{{@index}} - {{name}} - {{email}} - {{phoneNumber phone}} <a href="#" data-click="edit({{id}})">Edit</a> - <a href="#" data-click="remove({{id}})">Delete</a></li>
 {{/order}}
+
+<!--
+{{#accounts}}
+  <li>{{@index}} - {{name}} - {{email}} - {{phoneNumber phone}} <a href="#" data-click="edit({{id}})">Edit</a> - <a href="#" data-click="remove({{id}})">Delete</a></li>
+{{/accounts}}
+-->
 </ul>

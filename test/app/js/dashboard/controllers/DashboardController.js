@@ -3,7 +3,7 @@ define([], function() {
     scope.name = "Ivan";
     scope.lastname = "Rodriguez";
     scope.username = "epplestun";
-    scope.lista  = [1, 2, 3];
+    scope.lista  = [1, 2, 3, 5, 6,7, 4, 0,10, 11,40,23];
     scope.test1component = "test1component hola!!";
     scope.test1component2 = "test1component2";
     scope.test1component3 = "test1component3";
