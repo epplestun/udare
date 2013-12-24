@@ -3,7 +3,7 @@ define([], function() {
     this.loadAccounts = function() {  
       var deferred = q.defer();     
   
-      restful.all('accounts').getList().then(function(data) {        
+      restful.all('accounts').getList().then(function(data) {
         deferred.resolve(data);
       });
 

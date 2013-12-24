@@ -1,9 +1,13 @@
-udare.request = (function(q, log, undefined) {
+udare.requestProvider = (function(q, log, undefined) {
   log.info('udare.request');
 
   q.stopUnhandledRejectionTracking();
 
   var Request = function() {
+    this.withCredentials = false;
+  };
+  Request.prototype.enableCredentials = function() {
+    this.withCredentials = true;
   };
   Request.prototype.init = function(options) {
     options = options || {};
@@ -32,7 +36,23 @@ udare.request = (function(q, log, undefined) {
     var appendQuery = function(url, query) {
       if (query == '') return url;
       return (url + '&' + query).replace(/[&?]{1,2}/, '?');
-    }
+    };
+
+    var createCORSRequest = function(method, url) {
+      var xhr = new XMLHttpRequest();
+
+      if ("withCredentials" in xhr) {
+        xhr.open(method, url, true);
+      } else if (typeof XDomainRequest != "undefined") {
+        xhr = new XDomainRequest();
+        xhr.open(method, url);
+
+      } else {
+        xhr = null;
+      }
+      
+      return xhr;
+    };
 
     if(options.params) {
       options.url = appendQuery(options.url, toQueryString(options.params));
@@ -50,13 +70,16 @@ udare.request = (function(q, log, undefined) {
       options.url = appendQuery(options.url, '_=' + +new Date());
     }
 
-    var request  = new XMLHttpRequest();
-    request.open(options.method, options.url, options.async ? options.async : true);
+    var request = createCORSRequest(options.method, options.url);
 
     if(options && options.headers) {
       Object.keys(options.headers).forEach(function (key) {
         request.setRequestHeader(key, options.headers[key]);
       });       
+    }
+
+    if(this.withCredentials) {
+      request.withCredentials = true;
     }
 
     request.onload = function() {
@@ -114,29 +137,43 @@ udare.request = (function(q, log, undefined) {
     return this.init(options);
   };
   Request.prototype.head = function(url, options) {
+    /*
     this.request  = new XMLHttpRequest();
     this.deferred = q.defer();
     this.request.open("HEAD", url, true);
     return this.init(options);
+    */
+    throw new Error('Unimplemented');
   };
   Request.prototype.trace = function(url, options) {
+    /*
     this.request  = new XMLHttpRequest();
     this.deferred = q.defer();
     this.request.open("TRACE", url, true);
     return this.init(options);
+    */
+    throw new Error('Unimplemented');
   };
   Request.prototype.options = function(url, options) {
+    /*
     this.request  = new XMLHttpRequest();
     this.deferred = q.defer();
     this.request.open("OPTIONS", url, true);
     return this.init(options);
+    */
+    throw new Error('Unimplemented');
   };
   Request.prototype.patch = function(url, options) {
+    /*
     this.request  = new XMLHttpRequest();
     this.deferred = q.defer();
     this.request.open("PATCH", url, true);
     return this.init(options);
+    */
+    throw new Error('Unimplemented');
   };
 
   return new Request();
 })(udare.q, udare.log);
+
+udare.request = udare.requestProvider;

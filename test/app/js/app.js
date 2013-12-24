@@ -1,5 +1,7 @@
 define([
   'udare',
+  'filters/filters',
+  'formatters/formatters',
   'login/login',
   'menu/menu',
   'components/components',
@@ -8,35 +10,21 @@ define([
   ], function(udare) {
 
   var app = udare.module('App', [
+    udare.requestProvider,
     udare.routerProvider, 
     udare.logProvider, 
     udare.restfulProvider, 
     udare.stateProvider
   ]);
-  app.filter('order', function(data, direction, options) { // hacer que llegue una copia a la funcion
-    var newData = data.slice();
+  app.config(function(requestProvider, routerProvider, logProvider, restfulProvider, stateProvider) {
+    //
+    // RequestProvider config
+    //
+    requestProvider.enableCredentials();
 
-    if(newData && direction && options) {
-      newData = newData.sort(function(a, b) {
-        if(direction.toUpperCase() === 'ASC')
-          return a - b;
-        if(direction.toUpperCase() === 'DESC')
-          return b - a;
-      });
-
-      return this.filter(newData, options);
-    }
-  });
-  app.formatter('phoneNumber', function(phoneNumber) {
-    return "(" 
-      + phoneNumber.substr(0, 3) 
-      + ") " 
-      + phoneNumber.substr(3, 3) 
-      + "-" 
-      + phoneNumber.substr(6, 4);
-  });
-  app.config(function(routerProvider, logProvider, restfulProvider, stateProvider) {
+    //
     // StateProvider config
+    //
     stateProvider
       .state('layout', {
         url : '',
@@ -91,7 +79,9 @@ define([
         }
       });
 
+    //
     // RouterProvider config
+    //
     /*
     routerProvider
       .when('/dashboard', { 
@@ -110,21 +100,23 @@ define([
       });
       */
 
+    //
     // LogProvider config
+    //
     logProvider
       .setEnabled(true);
 
+    //
     // RestfulProvicer config
+    //
     restfulProvider
-      .setBaseUrl('http://localhost:3000')
+      .setBaseUrl('http://192.168.0.192:3000')
       .setRequestInterceptor(null)
       .setErrorInterceptor(null);
   });
   app.run(function(stateProvider) {
     stateProvider.init();
   });
-
-  //app.component('mycomponent', component);
 
   return app;
 });
