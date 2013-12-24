@@ -70,6 +70,16 @@ define([
           }
         }
       })
+      .state('account', {
+        url : '/accounts/:id',
+        layout : 'layout',
+        views : {
+          content : {
+            template : 'templates/accounts/detail.html',
+            controller : 'AccountController'
+          }
+        }
+      })
       .state('accounts', {
         url : '/accounts',
         layout : 'layout',
@@ -79,7 +89,8 @@ define([
             controller : 'AccountsController'
           }
         }
-      });
+      })
+      .init();
 
     // RouterProvider config
     /*

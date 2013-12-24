@@ -1,4 +1,23 @@
-udare.stateProvider = (function(q, request, compiler, executor, log, undefined) {
+udare.state = (function(undefined) {
+  var State = function() {
+  };
+  State.prototype.setState = function(state) {
+    this.state = state;
+  };
+  State.prototype.getState = function() {
+    return this.state;
+  };
+  State.prototype.setParams = function(params) {
+    this.params = params;
+  };
+  State.prototype.getParams = function() {
+    return this.params;
+  };
+  
+  return new State();
+})();
+
+udare.stateProvider = (function(state, q, request, compiler, executor, log, router, undefined) {
   log.info('udate.stateProvider');
 
   var isAbstractState = function(state) {
@@ -35,7 +54,7 @@ udare.stateProvider = (function(q, request, compiler, executor, log, undefined) 
       }.bind(this, deferred));
 
       return deferred.promise;
-    })().then(function(obj) {      
+    })().then(function(obj) {   
       var executorInstance = new executor();
       executorInstance.setHTML(obj.h);
       executorInstance.setControllers(obj.c);
@@ -81,10 +100,6 @@ udare.stateProvider = (function(q, request, compiler, executor, log, undefined) 
     this.states = [];
     this.abstractStates = [];
     this.mainView = null;
-
-    window.onhashchange = function() {
-      this.change();
-    }.bind(this);
   };
   StateProvider.prototype.state = function(name, state) {
     if(!this.state[name]) {
@@ -97,7 +112,23 @@ udare.stateProvider = (function(q, request, compiler, executor, log, undefined) 
 
     return this;
   };
-  StateProvider.prototype.change = function() {
+  StateProvider.prototype.change = function(currentState) {
+    var params = {};
+    
+    if(arguments.length > 1) {
+      keys = currentState.url.match(/:[a-zA-Z0-9\-]+/g).map(function(match) {
+        return match.substring(1);
+      });
+      values = Array.prototype.slice.call(arguments, 1);
+
+      for(var i = 0, l = values.length; i < l; i++) {
+        params[keys[i]] = values[i];
+      }
+    }
+
+    state.setState(currentState);
+    state.setParams(params);
+
     var requestPromises = [];
 
     var view = Array.prototype.slice.call(document.querySelectorAll('[data-view=main]')).map(function(view) {
@@ -111,30 +142,54 @@ udare.stateProvider = (function(q, request, compiler, executor, log, undefined) 
       this.mainView = view;
     }
 
-    var url = document.location.hash.slice(1);
-    for(var index in this.states) {
-      if(this.states[index].url === url) { // regexp
-        var state = this.states[index];
+    var promise;
+    var layout = this.abstractStates[currentState.layout] ? this.abstractStates[currentState.layout] : false;
 
-        var layout = this.abstractStates[state.layout] ? this.abstractStates[state.layout] : false;
-
-        if(layout) {
-          var stateViews = mergeViewsAndAbstractStates(state.views, this.abstractStates);
-          getStateViews(this.mainView.id, this.mainView.element, layout.template, stateViews);
-        } else {
-          getStateViews(this.mainView.id, this.mainView.element, state.template, stateViews);
-        }
-      }
+    if(layout) {
+      var stateViews = mergeViewsAndAbstractStates(currentState.views, this.abstractStates);
+      promise = getStateViews(this.mainView.id, this.mainView.element, layout.template, stateViews);
+    } else {
+      promise = getStateViews(this.mainView.id, this.mainView.element, currentState.template, stateViews);      
     }
+    requestPromises.push(request);
 
     if(requestPromises.length > 0) {
       q.all(requestPromises).then(function() {
       });
     }
   };
-  StateProvider.prototype.goTo = function(name) {
-    document.location = '#' + this.states[name].url;
+  StateProvider.prototype.init = function() {
+    var routes = {};
+    for(var name in this.states) {
+      var state = this.states[name];
+
+      if(state.url) {
+        routes[state.url] = this.change.bind(this, state);
+      }
+    }
+
+    this.router = router(routes).configure({
+      recurse: 'backward'
+      /*after: function() {
+        console.log('after');
+      },
+      notfound : function() {
+        console.log('route not found');
+      }*/
+    }).init();
+  };
+
+  StateProvider.prototype.goTo = function(name, params) {
+    var state = this.states[name];
+
+    if(state.url) {
+      var url = state.url.replace(/:[a-zA-Z0-9\-]+/g, function(m) {
+        return params[m.substring(1)];
+      });
+
+      document.location = '#' + url;
+    }
   };
 
   return new StateProvider();
-})(udare.q, udare.request, udare.compiler, udare.executor, udare.log);
+})(udare.state, udare.q, udare.request, udare.compiler, udare.executor, udare.log, Router);

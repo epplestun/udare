@@ -12,6 +12,7 @@ module.exports = function(grunt) {
 
           'src/vendor/q/q.min.js',
           'src/vendor/handlebars/handlebars.js',
+          'src/vendor/director/director.min.js',
           'src/vendor/htmlparser.js',
 
           // project sources

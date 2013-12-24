@@ -46,7 +46,6 @@ udare.executor = (function(controllersRepository, componentsRepository, pubsub, 
       var template = H.compile(this.getHTML());
       var output = template(context);
 
-      //var container = document.getElementById(this.getContainer()); // pasar el elemento DOM y no el ID
       var container = this.getContainer();
 
       var domInstance = dom(container)

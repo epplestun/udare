@@ -8,7 +8,7 @@ udare.controller = (function(controllers, scope, injector, q, log, undefined) {
     this.dependencies = injector.inject(controller);
   };
   Controller.prototype.init = function(scope) {
-    this.scope = scope;
+    this.scope  = scope;
 
     var dependencies = [];
     
