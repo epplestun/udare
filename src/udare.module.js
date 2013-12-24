@@ -1,4 +1,4 @@
-udare.module = (function(log, undefined) {
+udare.module = (function(injector, log, undefined) {
   log.info('udare.module');
   
   var Module = function(name, dependencies) {
@@ -7,6 +7,9 @@ udare.module = (function(log, undefined) {
   };
   Module.prototype.config = function(f) {
     f.apply(f, this.dependencies);
+  };
+  Module.prototype.run = function(f) {
+    f.apply(f, injector.inject(f));
   };
   Module.prototype.filter = function(name, filter) {
     udare.filter(name, filter);
@@ -27,4 +30,4 @@ udare.module = (function(log, undefined) {
   return function(name, dependencies) {
     return new Module(name, dependencies);
   };
-})(udare.log);
+})(udare.injector, udare.log);

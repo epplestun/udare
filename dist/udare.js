@@ -3348,7 +3348,7 @@ udare.executor = (function(controllersRepository, componentsRepository, pubsub, 
 
   return Executor;
 })(udare.controllers, udare.components, udare.pubsub, udare.events, udare.dom, udare.utils, udare.q, udare.log, Handlebars);
-udare.module = (function(log, undefined) {
+udare.module = (function(injector, log, undefined) {
   log.info('udare.module');
   
   var Module = function(name, dependencies) {
@@ -3357,6 +3357,9 @@ udare.module = (function(log, undefined) {
   };
   Module.prototype.config = function(f) {
     f.apply(f, this.dependencies);
+  };
+  Module.prototype.run = function(f) {
+    f.apply(f, injector.inject(f));
   };
   Module.prototype.filter = function(name, filter) {
     udare.filter(name, filter);
@@ -3377,7 +3380,7 @@ udare.module = (function(log, undefined) {
   return function(name, dependencies) {
     return new Module(name, dependencies);
   };
-})(udare.log);
+})(udare.injector, udare.log);
 udare.filter = (function(filters, log, H, undefined) {
   log.info('udare.filter');
 
@@ -4346,16 +4349,13 @@ udare.stateProvider = (function(state, q, request, compiler, executor, log, rout
   };
 
   StateProvider.prototype.goTo = function(name, params) {
-    //document.location = '#' + this.state.url;
-
     var state = this.states[name];
 
     if(state.url) {
-
       var url = state.url.replace(/:[a-zA-Z0-9\-]+/g, function(m) {
         return params[m.substring(1)];
       });
-      
+
       document.location = '#' + url;
     }
   };

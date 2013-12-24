@@ -89,8 +89,7 @@ define([
             controller : 'AccountsController'
           }
         }
-      })
-      .init();
+      });
 
     // RouterProvider config
     /*
@@ -120,6 +119,9 @@ define([
       .setBaseUrl('http://localhost:3000')
       .setRequestInterceptor(null)
       .setErrorInterceptor(null);
+  });
+  app.run(function(stateProvider) {
+    stateProvider.init();
   });
 
   //app.component('mycomponent', component);
