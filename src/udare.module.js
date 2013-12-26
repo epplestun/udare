@@ -2,11 +2,21 @@ udare.module = (function(modules, injector, log, undefined) {
   log.info('udare.module');
   
   var Module = function(name, dependencies) {
+    /*
     if(dependencies.length > 0)
       console.log('module', dependencies);
+    */
 
     this.name = name;
     this.dependencies = dependencies;
+
+    /*
+    this.controllers = {};
+    this.services = {};
+    this.filters = {};
+    this.formatters = {};
+    this.components = {};
+    */
   };
   Module.prototype.config = function(f) {
     f.apply(f, injector.inject(f));

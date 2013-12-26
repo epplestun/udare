@@ -4,6 +4,23 @@ udare.utils = (function(log, undefined) {
   return {
     STRIP_COMMENTS : /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg,
 
+    ucfirst : function(str) {
+      return str.charAt(0).toUpperCase() + str.substr(1);
+    },
+
+    camelCase : function(str) {
+      return str.replace(/-+(.)?/g, function(match, chr) {
+        return chr ? chr.toUpperCase() : '';
+      });
+    },
+
+    getFuncName : function(func) {
+      var fnStr  = func.toString().replace(this.STRIP_COMMENTS, '');
+      var fnName = fnStr.match(/function\s+(.*)\(/m)[1];
+
+      return fnName;
+    },
+
     getParamNames : function(func) {
       var fnStr = func.toString().replace(this.STRIP_COMMENTS, '');
       var result = fnStr.slice(fnStr.indexOf('(')+1, fnStr.indexOf(')')).match(/([^\s,]+)/g);

@@ -25,7 +25,7 @@ define([], function() {
       alert('a: ' + scope.widgetx);
     };
 
-    log.log('DashboardController', scope);
+    //log.log('DashboardController', scope);
   };
 
   return DashboardController;

@@ -110,7 +110,8 @@ define([
     // RestfulProvicer config
     //
     restfulProvider
-      .setBaseUrl('http://192.168.0.192:3000')
+      //.setBaseUrl('http://192.168.0.192:3000')
+      .setBaseUrl('http://localhost:3000')
       .setRequestInterceptor(null)
       .setErrorInterceptor(null);
   });

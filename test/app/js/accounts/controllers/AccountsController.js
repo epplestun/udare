@@ -1,10 +1,10 @@
 define([], function() {  
   
-  var AccountsController = function(scope, log, AccountsService, myDependency) {
+  var AccountsController = function(scope, log, accountsService) {
     scope.accounts = [];
     
     function loadAccounts() {
-      AccountsService.loadAccounts().then(function(data) {
+      accountsService.loadAccounts().then(function(data) {
         scope.accounts = data;
       });
     };
@@ -16,7 +16,7 @@ define([], function() {
       var email = document.getElementById('email').value;
       var phone = document.getElementById('phone').value;
 
-      AccountsService.addAccount(name, email, phone).then(function(data) {
+      accountsService.addAccount(name, email, phone).then(function(data) {
         loadAccounts();
         alert('New account created');
       });
@@ -32,7 +32,7 @@ define([], function() {
       e.stopPropagation();
       e.preventDefault();
 
-      AccountsService.loadAccountById(id).then(function(data) {
+      accountsService.loadAccountById(id).then(function(data) {
         scope.accountId = id;
         document.getElementById('name').value = data.name;
         document.getElementById('email').value = data.email;
@@ -46,7 +46,7 @@ define([], function() {
       var email = document.getElementById('email').value;
       var phone = document.getElementById('phone').value;
 
-      AccountsService.updateAccount(id, name, email, phone).then(function(data) {
+      accountsService.updateAccount(id, name, email, phone).then(function(data) {
         loadAccounts();
         alert('Account edited');
       });
@@ -60,7 +60,7 @@ define([], function() {
     	e.stopPropagation();
     	e.preventDefault();
 
-      AccountsService.removeAccount(id).then(function(data) {
+      accountsService.removeAccount(id).then(function(data) {
         loadAccounts();
         alert('Account deleted');
       });
@@ -70,13 +70,13 @@ define([], function() {
       e.stopPropagation();
       e.preventDefault();
 
-      AccountsService.loadAccountById(id).then(function(data) {
+      accountsService.loadAccountById(id).then(function(data) {
         //alert('New account created');
         log.log(data);
       });
     };
 
-    log.log('AccountsController', scope, AccountsService);
+    //log.log('AccountsController', scope, accountsService);
   };
 
   return AccountsController;

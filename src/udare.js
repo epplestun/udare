@@ -3,6 +3,7 @@ var udare = udare || {};
 var udare = (function(undefined) {
   var Udare = function() {
     this.modules = {};
+
     this.controllers = {};
     this.services = {};
     this.controllersScopes = {};

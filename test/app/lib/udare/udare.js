@@ -2599,6 +2599,7 @@ var udare = udare || {};
 var udare = (function(undefined) {
   var Udare = function() {
     this.modules = {};
+
     this.controllers = {};
     this.services = {};
     this.controllersScopes = {};
@@ -2655,6 +2656,23 @@ udare.utils = (function(log, undefined) {
   return {
     STRIP_COMMENTS : /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg,
 
+    ucfirst : function(str) {
+      return str.charAt(0).toUpperCase() + str.substr(1);
+    },
+
+    camelCase : function(str) {
+      return str.replace(/-+(.)?/g, function(match, chr) {
+        return chr ? chr.toUpperCase() : '';
+      });
+    },
+
+    getFuncName : function(func) {
+      var fnStr  = func.toString().replace(this.STRIP_COMMENTS, '');
+      var fnName = fnStr.match(/function\s+(.*)\(/m)[1];
+
+      return fnName;
+    },
+
     getParamNames : function(func) {
       var fnStr = func.toString().replace(this.STRIP_COMMENTS, '');
       var result = fnStr.slice(fnStr.indexOf('(')+1, fnStr.indexOf(')')).match(/([^\s,]+)/g);
@@ -2706,18 +2724,50 @@ udare.injector = (function(modules, utils, log, undefined) {
     var dependencies = [];
     var serviceDependencies = utils.getParamNames(fn);
     
+
+    //console.log('Injector.inject', modules[module].dependencies);
+
+    var others = [];
     var keys = ['controllers', 'services', 'filters', 'formatters', 'components'];
     for(var index in serviceDependencies) {
       var serviceDependency = serviceDependencies[index];
 
       for(var index in keys) {
-        if(serviceDependency in udare[keys[index]]) {
-          dependencies.push(udare[keys[index]][serviceDependency]);
+        if(utils.ucfirst(serviceDependency) in udare[keys[index]]) {
+          dependencies.push(udare[keys[index]][utils.ucfirst(serviceDependency)]);
         }
       }
 
       if(udare[serviceDependency] && serviceDependency !== 'scope') {
         dependencies.push(udare[serviceDependency]);
+      } else if(serviceDependency !== 'scope') {
+        others.push(serviceDependency);
+      }
+    }
+
+    if(others.length > 0) {
+      for(var i in others) {
+        var other = others[i];
+
+        for(var dep in modules[module].dependencies) {
+
+          if(utils.ucfirst(utils.camelCase(other)) === utils.ucfirst(utils.camelCase(utils.getFuncName(modules[module].dependencies[dep])))) {
+            var instance = new modules[module].dependencies[dep];
+            dependencies.push(instance);
+          }
+
+          /*
+          if(utils.camelCase(other) === utils.getFuncName(modules[module].dependencies[dep])) {
+            var instance = new modules[module].dependencies[dep];
+
+            console.log('xxxxx', instance);
+
+            dependencies.push(instance);
+
+            //console.log('yyyyy', other);
+          }
+          */
+        }
       }
     }
 
@@ -3352,11 +3402,21 @@ udare.module = (function(modules, injector, log, undefined) {
   log.info('udare.module');
   
   var Module = function(name, dependencies) {
+    /*
     if(dependencies.length > 0)
       console.log('module', dependencies);
+    */
 
     this.name = name;
     this.dependencies = dependencies;
+
+    /*
+    this.controllers = {};
+    this.services = {};
+    this.filters = {};
+    this.formatters = {};
+    this.components = {};
+    */
   };
   Module.prototype.config = function(f) {
     f.apply(f, injector.inject(f));

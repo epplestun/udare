@@ -22,7 +22,7 @@ define([], function() {
       scope.widget = value;
     };
 
-    log.log('Widget1Controller', scope);
+    //log.log('Widget1Controller', scope);
   };
 
   return Widget1Controller;

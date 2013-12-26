@@ -7,7 +7,7 @@ define([], function() {
       });
     };
 
-    log.log('AccountController', stateProvider);
+    //log.log('AccountController', stateProvider);
   };
 
   return AccountController;

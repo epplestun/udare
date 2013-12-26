@@ -6,7 +6,7 @@ define([], function() {
       alert(scope.widget);
     };
     
-    log.log('Widget2Controller', scope);
+    //log.log('Widget2Controller', scope);
   };
 
   return Widget2Controller;
