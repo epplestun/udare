@@ -1,6 +1,6 @@
 define([], function() {  
   
-  var AccountsController = function(scope, log, AccountsService) {
+  var AccountsController = function(scope, log, AccountsService, myDependency) {
     scope.accounts = [];
     
     function loadAccounts() {

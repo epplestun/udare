@@ -20,7 +20,7 @@ define([
     //
     // RequestProvider config
     //
-    requestProvider.enableCredentials();
+    //requestProvider.enableCredentials();
 
     //
     // StateProvider config

@@ -1,8 +1,8 @@
-udare.injector = (function(utils, log, undefined) {
+udare.injector = (function(modules, utils, log, undefined) {
   log.info('udare.injector');
 
   var Injector = function() {};
-  Injector.prototype.inject = function(fn) {
+  Injector.prototype.inject = function(fn, module) {
     var dependencies = [];
     var serviceDependencies = utils.getParamNames(fn);
     
@@ -11,7 +11,6 @@ udare.injector = (function(utils, log, undefined) {
       var serviceDependency = serviceDependencies[index];
 
       for(var index in keys) {
-
         if(serviceDependency in udare[keys[index]]) {
           dependencies.push(udare[keys[index]][serviceDependency]);
         }
@@ -26,4 +25,4 @@ udare.injector = (function(utils, log, undefined) {
   };
 
   return new Injector();
-})(udare.utils, udare.log);
+})(udare.modules, udare.utils, udare.log);

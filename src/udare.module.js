@@ -1,12 +1,15 @@
-udare.module = (function(injector, log, undefined) {
+udare.module = (function(modules, injector, log, undefined) {
   log.info('udare.module');
   
   var Module = function(name, dependencies) {
+    if(dependencies.length > 0)
+      console.log('module', dependencies);
+
     this.name = name;
     this.dependencies = dependencies;
   };
   Module.prototype.config = function(f) {
-    f.apply(f, this.dependencies);
+    f.apply(f, injector.inject(f));
   };
   Module.prototype.run = function(f) {
     f.apply(f, injector.inject(f));
@@ -18,16 +21,16 @@ udare.module = (function(injector, log, undefined) {
     udare.formatter(name, formatter);
   };
   Module.prototype.controller = function(name, controller) {
-    udare.controller(name, controller);
+    udare.controller(name, controller, this.name);
   };
   Module.prototype.service = function(name, service) {
-    udare.service(name, service);
+    udare.service(name, service, this.name);
   };
   Module.prototype.component = function(name, component) {
     udare.component(name, component);
   };
 
   return function(name, dependencies) {
-    return new Module(name, dependencies);
+    return modules[name] = new Module(name, dependencies);
   };
-})(udare.injector, udare.log);
+})(udare.modules, udare.injector, udare.log);

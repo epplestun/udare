@@ -2598,6 +2598,7 @@ var udare = udare || {};
 
 var udare = (function(undefined) {
   var Udare = function() {
+    this.modules = {};
     this.controllers = {};
     this.services = {};
     this.controllersScopes = {};
@@ -2697,11 +2698,11 @@ udare.utils = (function(log, undefined) {
     }
   };
 })(udare.log);
-udare.injector = (function(utils, log, undefined) {
+udare.injector = (function(modules, utils, log, undefined) {
   log.info('udare.injector');
 
   var Injector = function() {};
-  Injector.prototype.inject = function(fn) {
+  Injector.prototype.inject = function(fn, module) {
     var dependencies = [];
     var serviceDependencies = utils.getParamNames(fn);
     
@@ -2710,7 +2711,6 @@ udare.injector = (function(utils, log, undefined) {
       var serviceDependency = serviceDependencies[index];
 
       for(var index in keys) {
-
         if(serviceDependency in udare[keys[index]]) {
           dependencies.push(udare[keys[index]][serviceDependency]);
         }
@@ -2725,7 +2725,7 @@ udare.injector = (function(utils, log, undefined) {
   };
 
   return new Injector();
-})(udare.utils, udare.log);
+})(udare.modules, udare.utils, udare.log);
 udare.pubsub = (function(log, undefined) {
   log.info('udare.pubsub');
 
@@ -3348,15 +3348,18 @@ udare.executor = (function(controllersRepository, componentsRepository, pubsub, 
 
   return Executor;
 })(udare.controllers, udare.components, udare.pubsub, udare.events, udare.dom, udare.utils, udare.q, udare.log, Handlebars);
-udare.module = (function(injector, log, undefined) {
+udare.module = (function(modules, injector, log, undefined) {
   log.info('udare.module');
   
   var Module = function(name, dependencies) {
+    if(dependencies.length > 0)
+      console.log('module', dependencies);
+
     this.name = name;
     this.dependencies = dependencies;
   };
   Module.prototype.config = function(f) {
-    f.apply(f, this.dependencies);
+    f.apply(f, injector.inject(f));
   };
   Module.prototype.run = function(f) {
     f.apply(f, injector.inject(f));
@@ -3368,19 +3371,19 @@ udare.module = (function(injector, log, undefined) {
     udare.formatter(name, formatter);
   };
   Module.prototype.controller = function(name, controller) {
-    udare.controller(name, controller);
+    udare.controller(name, controller, this.name);
   };
   Module.prototype.service = function(name, service) {
-    udare.service(name, service);
+    udare.service(name, service, this.name);
   };
   Module.prototype.component = function(name, component) {
     udare.component(name, component);
   };
 
   return function(name, dependencies) {
-    return new Module(name, dependencies);
+    return modules[name] = new Module(name, dependencies);
   };
-})(udare.injector, udare.log);
+})(udare.modules, udare.injector, udare.log);
 udare.filter = (function(filters, log, H, undefined) {
   log.info('udare.filter');
 
@@ -3420,23 +3423,23 @@ udare.formatter = (function(formatters, log, H, undefined) {
 udare.service = (function(services, injector, log, undefined) {
   log.info('udare.service');
 
-  var Service = function(name, service) {
+  var Service = function(name, service, module) {
     this.name = name;
-    service.apply(this, injector.inject(service));
+    service.apply(this, injector.inject(service, module));
   };
 
-  return function(name, service) {
-    return services[name] = new Service(name, service);
+  return function(name, service, module) {
+    return services[name] = new Service(name, service, module);
   };  
 })(udare.services, udare.injector, udare.log);
 udare.controller = (function(controllers, scope, injector, q, log, undefined) {
   log.info('udare.controller');
   
-  var Controller = function(name, controller) {
+  var Controller = function(name, controller, module) {
     this.name = name;
     this.controller = controller;
 
-    this.dependencies = injector.inject(controller);
+    this.dependencies = injector.inject(controller, module);
   };
   Controller.prototype.init = function(scope) {
     this.scope  = scope;
@@ -3449,8 +3452,8 @@ udare.controller = (function(controllers, scope, injector, q, log, undefined) {
     this.controller.apply(this.controller, dependencies);
   };
 
-  return function(name, controller) {
-    return controllers[name] = new Controller(name, controller);
+  return function(name, controller, module) {
+    return controllers[name] = new Controller(name, controller, module);
   };
 })(udare.controllers, udare.scope, udare.injector, udare.q, udare.log);
 udare.component = (function(components, injector, utils, log, H, undefined) {
