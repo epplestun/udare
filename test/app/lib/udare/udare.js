@@ -2724,9 +2724,6 @@ udare.injector = (function(modules, utils, log, undefined) {
     var dependencies = [];
     var serviceDependencies = utils.getParamNames(fn);
     
-
-    //console.log('Injector.inject', modules[module].dependencies);
-
     var others = [];
     var keys = ['controllers', 'services', 'filters', 'formatters', 'components'];
     for(var index in serviceDependencies) {
@@ -2748,25 +2745,11 @@ udare.injector = (function(modules, utils, log, undefined) {
     if(others.length > 0) {
       for(var i in others) {
         var other = others[i];
-
         for(var dep in modules[module].dependencies) {
-
           if(utils.ucfirst(utils.camelCase(other)) === utils.ucfirst(utils.camelCase(utils.getFuncName(modules[module].dependencies[dep])))) {
             var instance = new modules[module].dependencies[dep];
             dependencies.push(instance);
           }
-
-          /*
-          if(utils.camelCase(other) === utils.getFuncName(modules[module].dependencies[dep])) {
-            var instance = new modules[module].dependencies[dep];
-
-            console.log('xxxxx', instance);
-
-            dependencies.push(instance);
-
-            //console.log('yyyyy', other);
-          }
-          */
         }
       }
     }
@@ -4365,6 +4348,20 @@ udare.stateProvider = (function(state, q, request, compiler, executor, log, rout
     return deferred.promise;
   };
 
+  var getStateController = function(id, element, state) {
+    var deferred = q.defer();
+
+    request.get(state.template).then(function(response) {
+      element.innerHTML = response;
+      
+      resolveView(id, response, state.controller);
+
+      deferred.resolve('');
+    });
+
+    return deferred.promise;
+  };
+
   var StateProvider = function() {
     this.states = [];
     this.abstractStates = [];
@@ -4418,7 +4415,7 @@ udare.stateProvider = (function(state, q, request, compiler, executor, log, rout
       var stateViews = mergeViewsAndAbstractStates(currentState.views, this.abstractStates);
       promise = getStateViews(this.mainView.id, this.mainView.element, layout.template, stateViews);
     } else {
-      promise = getStateViews(this.mainView.id, this.mainView.element, currentState.template, stateViews);      
+      promise = getStateController(this.mainView.id, this.mainView.element, currentState);      
     }
     requestPromises.push(request);
 

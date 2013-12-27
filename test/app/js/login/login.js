@@ -1,10 +1,9 @@
 define([
   'udare',
-  'login/LoginController',
-  'login/LoginSocketService',
-  ], function(udare, LoginController, LoginSocketService) {
+  'login/LoginController'
+  ], function(udare, LoginController) {
   
-  var login = udare.module('login', [LoginSocketService]);
+  var login = udare.module('login', []);
   login.controller('LoginController', LoginController);
 
   return login;

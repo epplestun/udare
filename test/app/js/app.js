@@ -9,13 +9,7 @@ define([
   'accounts/accounts'
   ], function(udare) {
 
-  var app = udare.module('App', [
-    udare.requestProvider,
-    udare.routerProvider, 
-    udare.logProvider, 
-    udare.restfulProvider, 
-    udare.stateProvider
-  ]);
+  var app = udare.module('App', []);
   app.config(function(requestProvider, routerProvider, logProvider, restfulProvider, stateProvider) {
     //
     // RequestProvider config

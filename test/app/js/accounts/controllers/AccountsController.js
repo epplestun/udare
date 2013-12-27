@@ -1,8 +1,8 @@
 define([], function() {  
   
-  var AccountsController = function(scope, log, accountsService) {
-    scope.accounts = [];
-    
+  var AccountsController = function(scope, log, accountsService, accountsSocket) {
+    scope.accounts = scope.accounts ? scope.accounts : [];
+
     function loadAccounts() {
       accountsService.loadAccounts().then(function(data) {
         scope.accounts = data;
@@ -10,6 +10,8 @@ define([], function() {
     };
 
     loadAccounts();
+    
+    accountsSocket.onAccountsChange(loadAccounts);
 
     scope.add = function() {
       var name = document.getElementById('name').value;
@@ -17,7 +19,8 @@ define([], function() {
       var phone = document.getElementById('phone').value;
 
       accountsService.addAccount(name, email, phone).then(function(data) {
-        loadAccounts();
+        accountsSocket.accountChange();
+
         alert('New account created');
       });
 
@@ -47,7 +50,8 @@ define([], function() {
       var phone = document.getElementById('phone').value;
 
       accountsService.updateAccount(id, name, email, phone).then(function(data) {
-        loadAccounts();
+        accountsSocket.accountChange();
+
         alert('Account edited');
       });
 
@@ -61,7 +65,8 @@ define([], function() {
     	e.preventDefault();
 
       accountsService.removeAccount(id).then(function(data) {
-        loadAccounts();
+        accountsSocket.accountChange();
+
         alert('Account deleted');
       });
     };

@@ -96,6 +96,19 @@ udare.stateProvider = (function(state, q, request, compiler, executor, log, rout
     return deferred.promise;
   };
 
+  var getStateController = function(id, element, state) {
+    var deferred = q.defer();
+
+    request.get(state.template).then(function(response) {
+      element.innerHTML = response;
+      
+      resolveView(id, response, state.controller);
+      deferred.resolve('');
+    });
+
+    return deferred.promise;
+  };
+
   var StateProvider = function() {
     this.states = [];
     this.abstractStates = [];
@@ -149,7 +162,7 @@ udare.stateProvider = (function(state, q, request, compiler, executor, log, rout
       var stateViews = mergeViewsAndAbstractStates(currentState.views, this.abstractStates);
       promise = getStateViews(this.mainView.id, this.mainView.element, layout.template, stateViews);
     } else {
-      promise = getStateViews(this.mainView.id, this.mainView.element, currentState.template, stateViews);      
+      promise = getStateController(this.mainView.id, this.mainView.element, currentState);      
     }
     requestPromises.push(request);
 
