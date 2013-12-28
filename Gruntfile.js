@@ -6,10 +6,6 @@ module.exports = function(grunt) {
     concat: {
       js: {
         src: [
-          // vendor libs
-          //'lib/q/q.min.js',
-          //'lib/handlebars.js/dist/handlebars.js',
-
           'src/vendor/q/q.min.js',
           'src/vendor/handlebars/handlebars.js',
           'src/vendor/director/director.min.js',
