@@ -4355,7 +4355,6 @@ udare.stateProvider = (function(state, q, request, compiler, executor, log, rout
       element.innerHTML = response;
       
       resolveView(id, response, state.controller);
-
       deferred.resolve('');
     });
 

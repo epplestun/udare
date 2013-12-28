@@ -1,7 +1,7 @@
 define([], function() {  
   
   var AccountsController = function(scope, log, accountsService, accountsSocket) {
-    scope.accounts = scope.accounts ? scope.accounts : [];
+    scope.accounts = [];
 
     function loadAccounts() {
       accountsService.loadAccounts().then(function(data) {
