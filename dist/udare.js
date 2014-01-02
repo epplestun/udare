@@ -4424,12 +4424,18 @@ udare.stateProvider = (function(state, q, request, compiler, executor, log, rout
     }
   };
   StateProvider.prototype.init = function() {
+    var defaultState = null;
     var routes = {};
+
     for(var name in this.states) {
       var state = this.states[name];
 
       if(state.url) {
         routes[state.url] = this.change.bind(this, state);
+      }
+
+      if(state.default) {
+        defaultState = state;
       }
     }
 
@@ -4441,7 +4447,7 @@ udare.stateProvider = (function(state, q, request, compiler, executor, log, rout
       notfound : function() {
         console.log('route not found');
       }*/
-    }).init();
+    }).init(defaultState ? defaultState.url : null);
   };
 
   StateProvider.prototype.goTo = function(name, params) {

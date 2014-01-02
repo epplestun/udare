@@ -33,6 +33,7 @@ define([
         controller : 'MenuController'
       })
       .state('login', {
+        default : true,
         url : '/login',
         template : 'templates/login/login.html',
         controller : 'LoginController'
